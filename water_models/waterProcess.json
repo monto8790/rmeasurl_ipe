@@ -1,0 +1,57 @@
+{
+    "@context": [
+        "http://uri.etsi.org/ngsi-ld/core-context.jsonld",
+        "http://waterdna.kr/ngsi-ld/water.jsonld"
+    ],
+    "id": "urn:waterdna:waterProcess_1",
+    "type": "kr.waterdna.waterProcess:1.0",
+    "createdAt": "2018-11-15T20:10:00,000+09:00",
+    "modifiedAt": "2018-11-15T20:10:00,000+09:00",
+    "name": {
+        "type": "Property",
+        "value": "세종시_정수장1_착수정"
+    },
+    "location": {
+        "type": "GeoProperty",
+        "value": {
+            "type": "Point",
+            "coordinates": [
+                127.1293735,
+                37.4114424
+            ]
+        }
+    },
+    "waterProcessType": {
+        "type": "Property",
+        "value": "여과지",
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "operationStatus": {
+        "type": "Property",
+        "value": "양호",
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "toc": {
+        "type": "Property",
+        "value": 0.3,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "uv54": {
+        "type": "Property",
+        "value": 0.03,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "turbidity": {
+        "type": "Property",
+        "value": 4.5,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "refWaterPurificationPlant": {
+        "type": "Relationship",
+        "object": "urn:waterdna:waterPurificationPlant_112233"
+    },
+    "refSewageTreatmentPlant": {
+        "type": "Relationship",
+        "object": "urn:waterdna:sewageTreatmentPlant_112233"
+    }
+}

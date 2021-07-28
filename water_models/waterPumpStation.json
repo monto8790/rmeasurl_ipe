@@ -1,0 +1,42 @@
+{
+    "@context": [
+        "http://uri.etsi.org/ngsi-ld/core-context.jsonld",
+        "http://waterdna.kr/ngsi-ld/water.jsonld"
+    ],
+    "id": "urn:waterdna:waterPumpStation_102",
+    "type": "kr.waterdna.waterPumpStation:1.0",
+    "createdAt": "2018-11-15T20:10:00,000+09:00",
+    "modifiedAt": "2018-11-15T20:10:00,000+09:00",
+    "name": {
+        "type": "Property",
+        "value": "세종시_취수장_102"
+    },
+    "location": {
+        "type": "GeoProperty",
+        "value": {
+            "type": "Point",
+            "coordinates": [
+                127.1293735,
+                37.4114424
+            ]
+        }
+    },
+    "intakeVolume": {
+        "type": "Property",
+        "value": 3000.2,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "energyConsumption": {
+        "type": "Property",
+        "value": 300.2,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "refWaterFlowMeter": {
+        "type": "Relationship",
+        "object": "urn:waterdna:waterFlowMeter_102"
+    },
+    "refWaterPump": {
+        "type": "Relationship",
+        "object": "urn:waterdna:waterPump_102"
+    }
+}

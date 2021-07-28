@@ -1,0 +1,45 @@
+{
+    "@context": [
+        "http://uri.etsi.org/ngsi-ld/core-context.jsonld",
+        "http://waterdna.kr/ngsi-ld/water.jsonld"
+    ],
+    "id": "urn:waterdna:waterPipePredicted_102",
+    "type": "kr.waterdna.waterPipePredicted:1.0",
+    "createdAt": "2018-11-15T20:10:00,000+09:00",
+    "modifiedAt": "2018-11-15T20:10:00,000+09:00",
+    "name": {
+        "type": "Property",
+        "value": "세종시_상수관_파이프_102"
+    },
+    "location": {
+        "type": "GeoProperty",
+        "value": {
+            "type": "LineString",
+            "coordinates": [[127.267652, 36.527788], [127.267653, 36.527790]]
+        }
+    },
+    "pipeType": {
+        "type": "Property",
+        "value": "waterSupply"
+    },
+    "flux": {
+        "type": "Property",
+        "value": 20.4,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "flowRate": {
+        "type": "Property",
+        "value": 0.6,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "waterLevel": {
+        "type": "Property",
+        "value": 0.3,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "waterPressure": {
+        "type": "Property",
+        "value": 10.1,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    }
+}

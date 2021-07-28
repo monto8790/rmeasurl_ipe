@@ -1,0 +1,45 @@
+{
+    "@context": [
+        "http://uri.etsi.org/ngsi-ld/core-context.jsonld",
+        "http://waterdna.kr/ngsi-ld/water.jsonld"
+    ],
+    "id": "urn:waterdna:waterLevelMeter_221",
+    "type": "kr.waterdna.waterLevelMeter:1.0",
+    "createdAt": "2018-11-15T20:10:00,000+09:00",
+    "modifiedAt": "2018-11-15T20:10:00,000+09:00",
+    "name": {
+        "type": "Property",
+        "value": "세종시_수위계_221"
+    },
+    "location": {
+        "type": "GeoProperty",
+        "value": {
+            "type": "Point",
+            "coordinates": [
+                127.1293735,
+                37.4114424
+            ]
+        }
+    },
+    "waterLevel": {
+        "type": "Property",
+        "value": 30.2,
+        "observedAt": "2018-11-15T20:10:00,000+09:00"
+    },
+    "refRawWaterSource": {
+        "type": "Relationship",
+        "object": "urn:waterdna:rawWaterSource_Daechung"
+    },
+    "refWaterReservoir": {
+        "type": "Relationship",
+        "object": "urn:waterdna:waterReservoir_102"
+    },
+    "refRiver": {
+        "type": "Relationship",
+        "object": "urn:waterdna:Miho_river"
+    },
+    "refWaterPipeObserved": {
+        "type": "Relationship",
+        "object": "urn:waterdna:waterPipeObserved_102"
+    }
+}
