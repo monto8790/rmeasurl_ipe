@@ -22,16 +22,21 @@ for (var i=0; i<date.length; i=i+2) {
 // //
 // console.log(data);
 // console.log(('20'+data[0]+data[1]+"-"+data[2]+"-"+data[3]+"-"+data[4]+"-"+data[5]).toString());
-data[0]='2021';
-console.log(data)
-let datedate = (data[0]+'-'+data[1]+'-'+data[2]+':'+data[3]+':'+data[4]+':'+data[5]).toString();
-console.log(datedate);
-let test = 2021+'-'+'7'+'-'+26+':'+15+':'+19+':'+0;
-console.log(test)
-// const today = moment([2021,1,28]);
-console.log(moment(data).utc().format('YYYY-MM-DDThh:mm:ss'));
-let dateform = moment(data).subtract(1,'M').utc().format('YYYY-MM-DDThh:mm:ss')+',000+09:00';
-console.log(dateform)
+// data[0]='2021';
+// console.log(data)
+// let datedate = (data[0]+'-'+data[1]+'-'+data[2]+':'+data[3]+':'+data[4]+':'+data[5]).toString();
+// console.log(datedate);
+// let test = 2021+'-'+'7'+'-'+26+':'+15+':'+19+':'+0;
+// console.log(test)
+// // const today = moment([2021,1,28]);
+// console.log(moment(data).utc().format('YYYY-MM-DDThh:mm:ss'));
+// let dateform = moment(data).subtract(1,'M').utc().format('YYYY-MM-DDThh:mm:ss')+',000+09:00';
+// console.log(dateform)
+
+
+var test = "0.10102";
+test = Number(parseFloat(test).toFixed(2));
+console.log(test);
 // const today2 = moment(data).format('YYYY-MM-DDThh:mm:ss')+',000+09:00';
 // let timet = moment(data).utc().format('YYYY-MM-DDThh:mm:ss');
 // console.log(today)

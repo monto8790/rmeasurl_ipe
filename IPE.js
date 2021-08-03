@@ -1,18 +1,32 @@
 const mqtt = require("mqtt");
 var util = require('util');
+
 const sensor_model = require('./functions/placeBuilder.js');
 var host = "203.253.128.164";
 var port = "1883";
-
+const moment = require("moment");
+// const stringify = StringifyWithFloats({ RDP: 'float',VWC: 'float',EleC: 'float',Temp: 'float',  })
+// let obj = {}
 init_mqtt_client();
+// sensor_model.cs650_sensor(obj, "LID_0003");
+// const floating_point_attrs = ["Temp"];
+// function replacer (key, value) {
+//     if (floating_point_attrs.includes(key) && Number.isInteger(value)) {
+//         return value.toString() + ".0";
+//     }
+//     return value;
+// }
+// const ster_replace_list = [];
+// function replacer(key,value){
+//     if(floating_point_attrs.includes(key)&& Number.isInteger(value)){
+//         const before = `"${key}":"${value.toFixed(1)}`;
+//         const after = `"${key}":"${value.toFixed(1)}`;
+//         ster_replace_list[before] =after;
+//
+//         return value.toFixed(1);
+//     }
+// }
 
-const floating_point_attrs = ["RDP", "Temp"];
-function replacer (key, value) {
-    if (floating_point_attrs.includes(key) && Number.isInteger(value)) {
-        return value.toString() + ".0";
-    }
-    return value;
-}
 
 function init_mqtt_client() {
     var opt = {
@@ -45,17 +59,20 @@ function on_mqtt_connect() {
 function on_mqtt_message_recv(topic, message) {
     console.log('receive message from topic: <- ' + topic);
     console.log('receive message: ' + message.toString('hex'));
+    console.log(message.toString());
     let sen_topic = topic.split('/');
-    sen_topic = sen_topic[2];
-    let recv_mes = message.toString('hex');
-    let {model_type, obj} = hamemil_decoded(recv_mes);
-    if(model_type === "collected_model"){
+    sen_topic = sen_topic[3];
+    let recv_mes = message.toString('hex');//hex
+    // let recv_mes = message.toString();//string test code
+    let obj= hamemil_decoded(recv_mes);
+    console.log(obj);
+    if(obj[0] === "collected_model"){
 
-    }else if (model_type === "cs650_model"){
-        sensor_model.cs650_sensor(obj,sen_topic[2]);
-    }else if (model_type === "wetherData_model"){
-        sensor_model.aws_sensor(obj,sen_topic[2]);
-    }else if (model_type === "xonic_model"){
+    }else if (obj[0] === "cs650_model"){
+        sensor_model.cs650_sensor(obj[1],sen_topic);
+    }else if (obj[0] === "wetherData_model"){
+        sensor_model.aws_sensor(obj[1],sen_topic);
+    }else if (obj[0] === "xonic_model"){
 
     }else {
         console.log("Reserved");
@@ -78,32 +95,29 @@ function response_mqtt (rsp_topic, rsc, to, fr, rqi, inpcs) {
     // console.log('noti publish -> ' + JSON.stringify(rsp_message));
 
 }
-function date_calc() {
+
+function date_calc(date) {
     let data = [];
     for (var i=0; i<date.length; i=i+2) {
         let txt = date.substr(i,2);
         data.push(parseInt(txt.toString('hex'),16));
     }
     data[0]='2021';
-    // let datedate = data[0]+'-'+data[1]+'-'+data[2]+':'+data[3]+':'+data[4]+':'+data[5];
-    // console.log(datedate);
-    console.log(moment(data).utc().format('YYYY-MM-DDThh:mm:ss'));
+    // console.log(moment(data).utc().format('YYYY-MM-DDThh:mm:ss'));
     let dateform = moment(data).subtract(1,'M').utc().format('YYYY-MM-DDThh:mm:ss')+',000+09:00';
-    console.log(dateform)
     return dateform
 }
+
 function hamemil_decoded(message){
     let model_type = "";
     let frame = {};
     let stx= message.substr(0,2);//2
-    console.log(stx);
     if(stx === 'fa'){
-        let data = [];
         let date = message.substr(2,12);//12
 
 
         date = date_calc(date);
-        console.log(date);
+        // console.log(date);
         frame.date = date;
         let len = message.substr(14,2);//2
 
@@ -156,7 +170,8 @@ function hamemil_decoded(message){
         }
         data = [];
         for (var i=0; i<payload.length; i=i+8) {
-            data.push(Buffer(payload.substr(i,8),'hex').readFloatLE(0));
+            data.push(Number(parseFloat(Buffer(payload.substr(i,8),'hex').readFloatLE(0)).toFixed(2)));
+            // data.push(Buffer(payload.substr(i,8),'hex').readFloatLE(0));
         }
         frame.payload.data = {}
         frame.payload.data.RDP = data[0];
@@ -165,8 +180,10 @@ function hamemil_decoded(message){
         frame.payload.data.Temp = data[3];
         frame.payload.data.reserv1 = data[4];
         frame.payload.data.reserv2 = data[5];
-        const str = JSON.stringify(frame.payload.data,replacer);
-        frame.payload.data=JSON.parse(str);
+        // const str = stringify(frame.payload.data)
+        // console.log(str);
+        // const str = JSON.stringify(frame.payload.data,replacer);
+        // frame.payload.data = str;
         // frame.payload.reserved = message.substr(40,8);
         // let crc = message.substr(0,36)//36 xor
         // frame.crc = crc;
@@ -174,6 +191,6 @@ function hamemil_decoded(message){
 
     }
     console.log(frame);
-    return model_type, frame
+    return [model_type, frame]
 }
 

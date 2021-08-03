@@ -1,42 +1,49 @@
 const fs = require('fs');
 // const getSensingValue = require('./getSensingValue.js');
 var util = require('util');
-// const axios = require('axios');
-// const http = require('http');
+const axios = require('axios');
+const http = require('http');
 exports.cs650_sensor = function(obj,topic){
+    server_ip = '172.20.0.207';
+    server_port = '8081';
+    server_path = 'entityOperations/upsert';
     let coordinates = [];
     let rawSensorObj = {};
     let models_json = "";
     let sensor_type = "";
     if(topic !== "weatherObserved_0001"){
-        sensor_type = "kr.waterdna.LID:1.0";
+        // sensor_type = "kr.waterdna.LID:1.1"; //변경가능성있음
         if(topic == "LID_0001"){
-            coordinates = [36.525838,127.265174];
+            coordinates = [127.265174,36.525838];
         }else if(topic == "LID_0002"){
-            coordinates = [36.524677,127.266663];
+            coordinates = [127.266663,36.524677];
         }else if(topic == "LID_0003"){
-            coordinates = [36.525030,127.270622];
+            coordinates = [127.270622,36.525030];
         }else if(topic == "LID_0004"){
-            coordinates = [36.526624,127.271479];
+            coordinates = [127.271479,36.526624];
         }else if(topic == "LID_0005"){
-            coordinates = [36.528258,127.267970];
+            coordinates = [127.267970,36.528258];
         }
     }
 
-    rawSensorObj.datasetId = "waterDataset001";//topic?
+    rawSensorObj.datasetId = "haemil_LID_02";//topic?
     rawSensorObj.entities = [];
     temp = {};
     temp = JSON.parse(fs.readFileSync(util.format('./water_models/%s.json','LID'), 'utf-8'));
-    temp["@context"] = [
-        "http://uri.etsi.org/ngsi-ld/core-context.jsonld",
-        "http://waterdna.kr/ngsi-ld/water.jsonld"
-    ];
-    temp.id = "urn:waterdna:_"+topic; // ?
-    temp.type = sensor_type;
+    temp.id = "urn:waterdna:haemil:"+topic; // ?
+    // temp.type = sensor_type;
     temp.location.value.coordinates = coordinates;
-    // temp.turbidity.value =
 
-    rawSensorObj.entities = temp;
+    temp.electricalConductivity.value = obj.payload.data.EleC;
+    temp.electricalConductivity.observedAt = obj.date;
+    temp.relativeDielectricPermitivity.value = obj.payload.data.RDP;
+    temp.relativeDielectricPermitivity.observedAt = obj.date;
+    temp.volumetricWaterContent.value = obj.payload.data.VWC;
+    temp.volumetricWaterContent.observedAt = obj.date;
+    temp.temperature.value = obj.payload.data.Temp;
+    temp.temperature.observedAt = obj.date;
+
+    rawSensorObj.entities.push(temp);
     // rawWaterSourceTemp.id = conf.place.id;
     // rawWaterSourceTemp.name.value = conf.place.name;
     //
@@ -53,17 +60,18 @@ exports.cs650_sensor = function(obj,topic){
     // console.log("Reported time:",rawWaterSourceTemp.pondage.observedAt);
     // console.log("-----------------------------------------------");
     //
-    console.log(rawSensorObj);
+    // console.log(rawSensorObj)
+    // console.log(rawSensorObj.entities);
     // rawWaterSource.entities[0] = rawWaterSourceTemp;
-    // // sendCreateRequest(rawWaterSource);
-    // sendCreateRequest(JSON.stringify(rawWaterSource));
+    // sendCreateRequest(rawWaterSource);
+    sendCreateRequest(server_ip,server_port,server_path,JSON.stringify(rawSensorObj));
 }
 exports.aws_sensor = function(obj,topic){
     let coordinates = [];
     let rawSensorObj = {};
     let sensor_type = "kr.waterdna.weatherObserved:1.0";
     if(topic === "weatherObserved_0001"){
-        coordinates = [36.527418,127.265801];
+        coordinates = [127.265801,36.527418];
 
 
 
@@ -431,13 +439,13 @@ exports.aws_sensor = function(obj,topic){
 //     });
 // }
 
-function sendCreateRequest(data) {
+function sendCreateRequest(server_ip,server_port,server_path,data) {
     // var config =;/
     console.log(data)
     axios({
         method: 'post',
         httpAgent: new http.Agent({ keepAlive: true }),
-        url: 'http://' + conf.server_ip + ':' + conf.server_port + '/' + conf.server_path,
+        url: 'http://' + server_ip + ':' + server_port + '/' + server_path,
         headers: {
             'Content-Type': 'application/json',
             'Connection': 'keep-alive',
@@ -449,6 +457,6 @@ function sendCreateRequest(data) {
             console.log(JSON.stringify(response.data));
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(JSON.stringify(error.response.data));
         });
 }
